@@ -1,8 +1,8 @@
-﻿<Application x:Class="SynthesisTemplateWpfApp.App"
+﻿<!-- Remove StartupUri so that startup is handled by App.xaml.cs -->
+<Application x:Class="SynthesisTemplateWpfApp.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:SynthesisTemplateWpfApp"
-             StartupUri="MainWindow.xaml">
+             xmlns:local="clr-namespace:SynthesisTemplateWpfApp">
     <Application.Resources>
          
     </Application.Resources>
