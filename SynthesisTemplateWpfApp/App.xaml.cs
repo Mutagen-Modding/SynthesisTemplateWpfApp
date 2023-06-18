@@ -1,8 +1,10 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using System.Windows;
+using Autofac;
+using Mutagen.Bethesda;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Synthesis;
-using SynthesisTemplateWpfApp.Engine;
+using SynthesisTemplateWpfApp.Engine.Singletons;
 
 namespace SynthesisTemplateWpfApp
 {
@@ -36,8 +38,14 @@ namespace SynthesisTemplateWpfApp
         /// </summary>
         private async Task RunPatch(IPatcherState<ISkyrimMod, ISkyrimModGetter> state)
         {
+            // Create the Inversion of Control container to wire our engine
+            // and get our patch run logic.  This is optional, and you could
+            // instead instantiate things yourself if that's more comfortable
+            var container = GetContainer();
+            var runLogic = container.Resolve<RunPatchLogic>();
+            
             // Have the run patch code exist in another file for organization
-            await new RunPatchLogic().Run(state);
+            await runLogic.Run(state);
         }
 
         /// <summary>
@@ -61,6 +69,17 @@ namespace SynthesisTemplateWpfApp
             var window = new MainWindow();
             window.Show();
             return 0;
+        }
+
+        /// <summary>
+        /// Uses Inversion of Control container library Autofac
+        /// to do the wiring of all the engine components for us
+        /// </summary>
+        private Autofac.IContainer GetContainer()
+        {
+            var builder = new ContainerBuilder();
+            builder.RegisterModule<AutofacModule>();
+            return builder.Build();
         }
     }
 }

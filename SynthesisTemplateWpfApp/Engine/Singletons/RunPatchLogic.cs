@@ -2,8 +2,11 @@
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Synthesis;
 
-namespace SynthesisTemplateWpfApp.Engine;
+namespace SynthesisTemplateWpfApp.Engine.Singletons;
 
+/// <summary>
+/// Class housing the run patcher logic
+/// </summary>
 public class RunPatchLogic
 {
     public async Task Run(IPatcherState<ISkyrimMod, ISkyrimModGetter> state)

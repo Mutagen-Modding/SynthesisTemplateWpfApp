@@ -8,6 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Mutagen.Bethesda.Autofac" Version="0.41.0" />
         <PackageReference Include="Mutagen.Bethesda.Synthesis" Version="0.25.4" />
         <PackageReference Include="Mutagen.Bethesda.Synthesis.WPF" Version="0.25.4" />
     </ItemGroup>
