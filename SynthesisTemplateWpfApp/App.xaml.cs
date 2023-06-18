@@ -1,10 +1,11 @@
 using System.Threading.Tasks;
 using System.Windows;
 using Autofac;
-using Mutagen.Bethesda;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Synthesis;
 using SynthesisTemplateWpfApp.Engine.Singletons;
+using SynthesisTemplateWpfApp.ViewModels.Singletons;
+using SynthesisTemplateWpfApp.Views;
 
 namespace SynthesisTemplateWpfApp
 {
@@ -55,7 +56,13 @@ namespace SynthesisTemplateWpfApp
         /// </summary>
         public int OpenForSettings(IOpenForSettingsState state)
         {
-            var window = new MainWindow();
+            // Create the Inversion of Control container to wire our viewmodels.
+            // and get our main view model.  This is optional, and you could
+            // instead instantiate things yourself if that's more comfortable
+            var container = GetContainer();
+            var mvm = container.Resolve<MainVm>();
+            
+            var window = new MainWindow(mvm);
             window.Show();
             return 0;
         }
@@ -66,7 +73,13 @@ namespace SynthesisTemplateWpfApp
         /// </summary>
         public int StandaloneOpen()
         {
-            var window = new MainWindow();
+            // Create the Inversion of Control container to wire our viewmodels.
+            // and get our main view model.  This is optional, and you could
+            // instead instantiate things yourself if that's more comfortable
+            var container = GetContainer();
+            var mvm = container.Resolve<MainVm>();
+            
+            var window = new MainWindow(mvm);
             window.Show();
             return 0;
         }

@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using Noggog.Autofac;
 using SynthesisTemplateWpfApp.Engine.Singletons;
+using SynthesisTemplateWpfApp.ViewModels.Singletons;
 
 namespace SynthesisTemplateWpfApp;
 
@@ -16,6 +17,14 @@ public class AutofacModule : Autofac.Module
         builder.RegisterAssemblyTypes(typeof(RunPatchLogic).Assembly)
             .InNamespacesOf(
                 typeof(RunPatchLogic))
+            .AsImplementedInterfaces()
+            .AsSelf()
+            .SingleInstance();
+        
+        // Register all classes in engine's singleton area as singletons
+        builder.RegisterAssemblyTypes(typeof(MainVm).Assembly)
+            .InNamespacesOf(
+                typeof(MainVm))
             .AsImplementedInterfaces()
             .AsSelf()
             .SingleInstance();
