@@ -1,11 +1,14 @@
-using System.Threading.Tasks;
+using System;
 using System.Windows;
 using Autofac;
+using Microsoft.Build.Utilities;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Synthesis;
+using Serilog;
 using SynthesisTemplateWpfApp.Engine.Singletons;
 using SynthesisTemplateWpfApp.ViewModels.Singletons;
 using SynthesisTemplateWpfApp.Views;
+using Task = System.Threading.Tasks.Task;
 
 namespace SynthesisTemplateWpfApp
 {
@@ -56,15 +59,23 @@ namespace SynthesisTemplateWpfApp
         /// </summary>
         public int OpenForSettings(IOpenForSettingsState state)
         {
-            // Create the Inversion of Control container to wire our viewmodels.
-            // and get our main view model.  This is optional, and you could
-            // instead instantiate things yourself if that's more comfortable
-            var container = GetContainer();
-            var mvm = container.Resolve<MainVm>();
-            
-            var window = new MainWindow(mvm);
-            window.Show();
-            return 0;
+            try
+            {
+                // Create the Inversion of Control container to wire our viewmodels.
+                // and get our main view model.  This is optional, and you could
+                // instead instantiate things yourself if that's more comfortable
+                var container = GetContainer();
+                var mvm = container.Resolve<MainVm>();
+                
+                var window = new MainWindow(mvm);
+                window.Show();
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                Engine.Logger.Instance.Error(ex, "Error opening for settings");
+                throw;
+            }
         }
 
         /// <summary>
@@ -73,15 +84,23 @@ namespace SynthesisTemplateWpfApp
         /// </summary>
         public int StandaloneOpen()
         {
-            // Create the Inversion of Control container to wire our viewmodels.
-            // and get our main view model.  This is optional, and you could
-            // instead instantiate things yourself if that's more comfortable
-            var container = GetContainer();
-            var mvm = container.Resolve<MainVm>();
-            
-            var window = new MainWindow(mvm);
-            window.Show();
-            return 0;
+            try
+            {
+                // Create the Inversion of Control container to wire our viewmodels.
+                // and get our main view model.  This is optional, and you could
+                // instead instantiate things yourself if that's more comfortable
+                var container = GetContainer();
+                var mvm = container.Resolve<MainVm>();
+                
+                var window = new MainWindow(mvm);
+                window.Show();
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                Engine.Logger.Instance.Error(ex, "Error opening standalone");
+                throw;
+            }
         }
 
         /// <summary>
@@ -92,6 +111,7 @@ namespace SynthesisTemplateWpfApp
         {
             var builder = new ContainerBuilder();
             builder.RegisterModule<AutofacModule>();
+            builder.RegisterInstance(Engine.Logger.Instance).As<ILogger>();
             return builder.Build();
         }
     }
