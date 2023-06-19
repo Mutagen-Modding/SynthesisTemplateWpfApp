@@ -5,9 +5,20 @@
                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                      xmlns:local="clr-namespace:SynthesisTemplateWpfApp"
                      xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+                     xmlns:vms="clr-namespace:SynthesisTemplateWpfApp.ViewModels.Singletons"
+                     xmlns:views="clr-namespace:SynthesisTemplateWpfApp.Views"
                      mc:Ignorable="d"
-                     Title="MainWindow" Height="450" Width="800">
+                     d:DataContext="{d:DesignInstance vms:MainVm, IsDesignTimeCreatable=False}"
+                     Title="My Synthesis Patcher Settings UI" 
+                     Height="450" Width="800">
     <Grid>
-
+        <ContentPresenter Content="{Binding ActivePanel}">
+            <ContentPresenter.Resources>
+                <!-- Register what View to show with what ViewModel -->
+                <DataTemplate DataType="{x:Type vms:SettingsVm}">
+                    <views:SettingsView />
+                </DataTemplate>
+            </ContentPresenter.Resources>
+        </ContentPresenter>
     </Grid>
 </mah:MetroWindow>
