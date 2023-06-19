@@ -1,14 +1,14 @@
 using System;
+using System.Threading.Tasks;
 using System.Windows;
 using Autofac;
-using Microsoft.Build.Utilities;
+using Mutagen.Bethesda;
 using Mutagen.Bethesda.Skyrim;
 using Mutagen.Bethesda.Synthesis;
 using Serilog;
 using SynthesisTemplateWpfApp.Engine.Singletons;
 using SynthesisTemplateWpfApp.ViewModels.Singletons;
 using SynthesisTemplateWpfApp.Views;
-using Task = System.Threading.Tasks.Task;
 
 namespace SynthesisTemplateWpfApp
 {
@@ -27,9 +27,9 @@ namespace SynthesisTemplateWpfApp
             // Call into Synthesis to parse the args and decide which mode to start in
             SynthesisPipeline.Instance
                 .AddPatch<ISkyrimMod, ISkyrimModGetter>(RunPatch)
-                .SetTypicalOpen(StandaloneOpen)
-                // Alternatively can use this TypicalOpen to have it just run patcher if exe is opened
-                //.SetTypicalOpen(GameRelease.SkyrimSE, "SomeModName.esp")
+                .SetTypicalOpen(GameRelease.SkyrimSE, "SomeModName.esp")
+                // Alternatively can use this TypicalOpen to open the UI
+                // .SetTypicalOpen(StandaloneOpen)
                 .SetOpenForSettings(OpenForSettings)
                 .SetForWpf()
                 .Run(e.Args)
@@ -66,6 +66,7 @@ namespace SynthesisTemplateWpfApp
                 // instead instantiate things yourself if that's more comfortable
                 var container = GetContainer();
                 var mvm = container.Resolve<MainVm>();
+                mvm.Initialize(state);
                 
                 var window = new MainWindow(mvm);
                 window.Show();
@@ -79,28 +80,20 @@ namespace SynthesisTemplateWpfApp
         }
 
         /// <summary>
-        /// Will be called when users double click the exe, or is run without any args from the IDE.
-        /// This is meant to be used if you want the app to open a window if run standalone.
+        /// Not currently used, unless the alternative UseTypicalOpen is uncommented above
         /// </summary>
         public int StandaloneOpen()
         {
-            try
-            {
-                // Create the Inversion of Control container to wire our viewmodels.
-                // and get our main view model.  This is optional, and you could
-                // instead instantiate things yourself if that's more comfortable
-                var container = GetContainer();
-                var mvm = container.Resolve<MainVm>();
-                
-                var window = new MainWindow(mvm);
-                window.Show();
-                return 0;
-            }
-            catch (Exception ex)
-            {
-                Engine.Logger.Instance.Error(ex, "Error opening standalone");
-                throw;
-            }
+            // Can instantiate your main window like Open For Settings, but without any information
+            // given by Synthesis.
+            
+            // This can make it hard, though, as you don't know where the settings are since that's
+            // usually provided by the Synthesis IOpenForSettingsState
+            
+            // You can still have it open the UI in standalone if you want, but you'll have to figure
+            // out how it should work without any information from Synthesis
+
+            throw new NotImplementedException();
         }
 
         /// <summary>

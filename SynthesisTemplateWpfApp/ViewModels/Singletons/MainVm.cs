@@ -1,8 +1,14 @@
-﻿using Noggog.WPF;
+﻿using System.Windows;
+using Mutagen.Bethesda.Synthesis;
+using Noggog.WPF;
 using ReactiveUI.Fody.Helpers;
 
 namespace SynthesisTemplateWpfApp.ViewModels.Singletons;
 
+/// <summary>
+/// Main View Model controlling what sub-view is shown in our window,
+/// as well as being an entry point for handling startup/shutdown calls
+/// </summary>
 public class MainVm : ViewModel
 {
     /// <summary>
@@ -18,5 +24,18 @@ public class MainVm : ViewModel
         
         // Start our app showing the settings.
         ActivePanel = Settings;
+    }
+
+    public void Initialize(IOpenForSettingsState openForSettingsState)
+    {
+        Settings.LoadSettings(openForSettingsState);
+    }
+
+    public void Shutdown()
+    {
+        Settings.SaveSettings();
+
+        // Exit app
+        Application.Current.Shutdown();
     }
 }
